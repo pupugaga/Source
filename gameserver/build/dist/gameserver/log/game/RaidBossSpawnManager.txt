@@ -1,0 +1,6 @@
+[17.07.05 11:00:47] '---': RaidBossSpawnManager: Updated Crixus respawn time to 1499245247396
+[17.07.05 11:01:02] '---': RaidBossSpawnManager: Updated Crixus respawn time to 1499245262604
+[17.07.11 2:38:12] '---': RaidBossSpawnManager: Updated Noblesse rb respawn time to 1499834543372
+[17.07.15 4:00:37] '---': RaidBossSpawnManager: Updated Noblesse rb respawn time to 1500193475153
+[17.07.17 23:46:13] '---': RaidBossSpawnManager: Updated Nobless respawn time to 1500451278518
+[17.07.18 5:04:34] '---': RaidBossSpawnManager: Updated Nobless respawn time to 1500361474064

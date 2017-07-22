@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- Potions-->
+<list>
+
+<!-- Top-Grade Life Stone - Level 76 -->
+        <item id="1">
+            <production id="8742" count="3"/>
+            <ingredient id="57" count="100000"/>
+        </item>
+ </list>
