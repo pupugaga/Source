@@ -1,0 +1,42 @@
+17:40:41,306  INFO Util:141 - ======================================================================-[ Team ]
+17:40:41,310  INFO L2Frozen:35 -                                                                             
+17:40:41,311  INFO L2Frozen:36 -          #     #####          ##### ##### ##### ##### ##### ##    #         
+17:40:41,311  INFO L2Frozen:37 -          #         #          #     #   # #   #     # #     # #   #         
+17:40:41,314  INFO L2Frozen:38 -          #      ###    ####   ###   #   # #   #   #   ###   #  #  #         
+17:40:41,314  INFO L2Frozen:39 -          #     #              #     ###   #   # #     #     #   # #         
+17:40:41,314  INFO L2Frozen:40 -          ##### #####          #     #  ## ##### ##### ##### #    ##         
+17:40:41,314  INFO L2Frozen:41 -                                                                             
+17:40:41,400  INFO Util:141 - ==================================================================-[ Database ]
+17:40:41,470  INFO MLog:80 - MLog clients using log4j logging.
+17:40:41,716  INFO C3P0Registry:204 - Initializing c3p0-0.9.1.2 [built 21-May-2007 15:04:56; debug? true; trace: 10]
+17:40:42,250  INFO AbstractPoolBackedDataSource:462 - Initializing c3p0 pool... com.mchange.v2.c3p0.ComboPooledDataSource [ acquireIncrement -> 5, acquireRetryAttempts -> 0, acquireRetryDelay -> 500, autoCommitOnClose -> true, automaticTestTable -> connection_test_table, breakAfterAcquireFailure -> false, checkoutTimeout -> 0, connectionCustomizerClassName -> null, connectionTesterClassName -> com.mchange.v2.c3p0.impl.DefaultConnectionTester, dataSourceName -> 1hge1369ppe1ui0hy80bl|3b192d32, debugUnreturnedConnectionStackTraces -> false, description -> null, driverClass -> com.mysql.jdbc.Driver, factoryClassLocation -> null, forceIgnoreUnresolvedTransactions -> false, identityToken -> 1hge1369ppe1ui0hy80bl|3b192d32, idleConnectionTestPeriod -> 3600, initialPoolSize -> 10, jdbcUrl -> jdbc:mysql://localhost/l2jdb, maxAdministrativeTaskTime -> 0, maxConnectionAge -> 0, maxIdleTime -> 0, maxIdleTimeExcessConnections -> 0, maxPoolSize -> 50, maxStatements -> 0, maxStatementsPerConnection -> 100, minPoolSize -> 10, numHelperThreads -> 3, numThreadsAwaitingCheckoutDefaultUser -> 0, preferredTestQuery -> null, properties -> {user=******, password=******}, propertyCycle -> 0, testConnectionOnCheckin -> false, testConnectionOnCheckout -> false, unreturnedConnectionTimeout -> 0, usesTraditionalReflectiveProxies -> false ]
+17:40:42,275  INFO Util:141 - ===========================================================-[ LoginController ]
+17:40:43,282  INFO LoginController:163 - Cached 10 KeyPairs for RSA communication
+17:40:43,847  INFO LoginController:217 - Stored 20 keys for Blowfish communication
+17:40:43,902  INFO GameServerTable:94 - Loaded 127 server names
+17:40:43,968  INFO GameServerTable:97 - Loaded 1 registered Game Servers
+17:40:44,169  INFO GameServerTable:100 - Cached 10 RSA keys for Game Server communication.
+17:40:44,282  INFO L2LoginServer:217 - Listening for GameServers on 127.0.0.1:9014
+17:40:44,283  INFO L2LoginServer:229 - Login Server ready on *:2106
+17:40:44,285  INFO Config:4476 - Loaded 2 IP Bans.
+17:47:36,341  INFO Util:141 - ======================================================================-[ Team ]
+17:47:36,344  INFO L2Frozen:35 -                                                                             
+17:47:36,344  INFO L2Frozen:36 -          #     #####          ##### ##### ##### ##### ##### ##    #         
+17:47:36,345  INFO L2Frozen:37 -          #         #          #     #   # #   #     # #     # #   #         
+17:47:36,347  INFO L2Frozen:38 -          #      ###    ####   ###   #   # #   #   #   ###   #  #  #         
+17:47:36,347  INFO L2Frozen:39 -          #     #              #     ###   #   # #     #     #   # #         
+17:47:36,348  INFO L2Frozen:40 -          ##### #####          #     #  ## ##### ##### ##### #    ##         
+17:47:36,348  INFO L2Frozen:41 -                                                                             
+17:47:36,380  INFO Util:141 - ==================================================================-[ Database ]
+17:47:36,417  INFO MLog:80 - MLog clients using log4j logging.
+17:47:36,615  INFO C3P0Registry:204 - Initializing c3p0-0.9.1.2 [built 21-May-2007 15:04:56; debug? true; trace: 10]
+17:47:37,079  INFO AbstractPoolBackedDataSource:462 - Initializing c3p0 pool... com.mchange.v2.c3p0.ComboPooledDataSource [ acquireIncrement -> 5, acquireRetryAttempts -> 0, acquireRetryDelay -> 500, autoCommitOnClose -> true, automaticTestTable -> connection_test_table, breakAfterAcquireFailure -> false, checkoutTimeout -> 0, connectionCustomizerClassName -> null, connectionTesterClassName -> com.mchange.v2.c3p0.impl.DefaultConnectionTester, dataSourceName -> 1hge1369ppeaqo9qwsquv|3b192d32, debugUnreturnedConnectionStackTraces -> false, description -> null, driverClass -> com.mysql.jdbc.Driver, factoryClassLocation -> null, forceIgnoreUnresolvedTransactions -> false, identityToken -> 1hge1369ppeaqo9qwsquv|3b192d32, idleConnectionTestPeriod -> 3600, initialPoolSize -> 10, jdbcUrl -> jdbc:mysql://localhost/l2jdb, maxAdministrativeTaskTime -> 0, maxConnectionAge -> 0, maxIdleTime -> 0, maxIdleTimeExcessConnections -> 0, maxPoolSize -> 50, maxStatements -> 0, maxStatementsPerConnection -> 100, minPoolSize -> 10, numHelperThreads -> 3, numThreadsAwaitingCheckoutDefaultUser -> 0, preferredTestQuery -> null, properties -> {user=******, password=******}, propertyCycle -> 0, testConnectionOnCheckin -> false, testConnectionOnCheckout -> false, unreturnedConnectionTimeout -> 0, usesTraditionalReflectiveProxies -> false ]
+17:47:37,137  INFO Util:141 - ===========================================================-[ LoginController ]
+17:47:38,328  INFO LoginController:163 - Cached 10 KeyPairs for RSA communication
+17:47:38,814  INFO LoginController:217 - Stored 20 keys for Blowfish communication
+17:47:38,829  INFO GameServerTable:94 - Loaded 127 server names
+17:47:38,881  INFO GameServerTable:97 - Loaded 1 registered Game Servers
+17:47:39,024  INFO GameServerTable:100 - Cached 10 RSA keys for Game Server communication.
+17:47:39,063  INFO L2LoginServer:217 - Listening for GameServers on 127.0.0.1:9014
+17:47:39,065  INFO L2LoginServer:229 - Login Server ready on *:2106
+17:47:39,067  INFO Config:4476 - Loaded 2 IP Bans.
