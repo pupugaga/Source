@@ -210,7 +210,7 @@ public class L2BossZone extends L2ZoneType
 				
 				if (player.isGM())
 				{
-					player.sendMessage("You left " + _zoneName);
+					player.sendMessage("You left Boss Zone Game Master");
 					return;
 				}
 				
@@ -221,7 +221,7 @@ public class L2BossZone extends L2ZoneType
 					// mark the time that the player left the zone
 					_playerAllowedReEntryTimes.put(character.getObjectId(), System.currentTimeMillis() + _timeInvade);
 				}
-				player.stopPvPFlag();
+				player.startPvPFlag();
 				player = null;
 			}
 		}

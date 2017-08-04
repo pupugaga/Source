@@ -64,7 +64,7 @@ public class Crixus extends Quest implements Runnable{
                 }
                 else
                 {
-                    final L2GrandBossInstance crixus = (L2GrandBossInstance) addSpawn(CRIXUS, 79618, -55439, -6104, 0, false, 0);
+                    final L2GrandBossInstance crixus = (L2GrandBossInstance) addSpawn(CRIXUS, 79635, -55431, -6104, 0, false, 0);
                     if (Config.ANNOUNCE_TO_ALL_SPAWN_RB)
                     {
                         Announcements.getInstance().announceToAll("Raid boss " + crixus.getName() + " spawned in world.");
@@ -82,7 +82,7 @@ public class Crixus extends Quest implements Runnable{
 				 */
                 final int hp = info.getInteger("currentHP");
                 final int mp = info.getInteger("currentMP");
-                final L2GrandBossInstance crixus = (L2GrandBossInstance) addSpawn(CRIXUS, 79618, -55439, -6104, 0, false, 0);
+                final L2GrandBossInstance crixus = (L2GrandBossInstance) addSpawn(CRIXUS, 79635, -55431, -6104, 0, false, 0);
                 if (Config.ANNOUNCE_TO_ALL_SPAWN_RB)
                 {
                     Announcements.getInstance().announceToAll("Raid boss " + crixus.getName() + " spawned in world.");
@@ -95,7 +95,7 @@ public class Crixus extends Quest implements Runnable{
             break;
             default:
             {
-                final L2GrandBossInstance crixus = (L2GrandBossInstance) addSpawn(CRIXUS, 79618, -55439, -6104, 0, false, 0);
+                final L2GrandBossInstance crixus = (L2GrandBossInstance) addSpawn(CRIXUS, 79635, -55431, -6104, 0, false, 0);
                 if (Config.ANNOUNCE_TO_ALL_SPAWN_RB)
                 {
                     Announcements.getInstance().announceToAll("Raid boss " + crixus.getName() + " spawned in world.");
@@ -134,7 +134,7 @@ public class Crixus extends Quest implements Runnable{
             case CRIXUS_SPAWN:
             {
 
-                    final L2GrandBossInstance crixus = (L2GrandBossInstance) addSpawn(CRIXUS, 79618, -55439, -6104, 0, false, 0);
+                    final L2GrandBossInstance crixus = (L2GrandBossInstance) addSpawn(CRIXUS, 79635, -55431, -6104, 0, false, 0);
                     if (Config.ANNOUNCE_TO_ALL_SPAWN_RB) {
                         Announcements.getInstance().announceToAll("Raid boss " + crixus.getName() + " spawned in world.");
                     }

@@ -200,7 +200,7 @@ public class GameServer
 		
 		final long serverLoadStart = System.currentTimeMillis();
 		
-		Util.printSection("Kevin >> You");
+		Util.printSection("Kevin == God");
 		
 		// Print L2jfrozen's Logo
 		//L2Frozen.info();

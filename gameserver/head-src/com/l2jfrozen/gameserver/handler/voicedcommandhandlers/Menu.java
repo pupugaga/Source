@@ -3,6 +3,7 @@ package com.l2jfrozen.gameserver.handler.voicedcommandhandlers;
 import com.l2jfrozen.gameserver.handler.IVoicedCommandHandler;
 import com.l2jfrozen.gameserver.model.L2World;
 import com.l2jfrozen.gameserver.model.actor.instance.L2PcInstance;
+import com.l2jfrozen.gameserver.network.serverpackets.ExAutoSoulShot;
 import com.l2jfrozen.gameserver.network.serverpackets.NpcHtmlMessage;
 import javolution.text.TextBuilder;
 
@@ -51,6 +52,43 @@ public class Menu implements IVoicedCommandHandler
         tb.append("<td><button width=32 height=12 back=\"L2UI_CH3.tutorial_pointer1\" fore=\"L2UI_CH3.tutorial_pointer1\"></td>");
         tb.append("</tr>");
         tb.append("</table><br>");
+
+        tb.append("<table border=\"1\" width=\"250\" height=\"12\" bgcolor=\"000000\">");
+        tb.append("<tr>");
+        tb.append("<td align=\"center\" width=\"52\">Auto Healing Potions</td>");
+        if(activeChar.useAutoHPPots) {
+            tb.append("<td width=\"16\"><button action=\"bypass -h autohppots\" width=24 height=12 back=\"L2UI_CH3.br_bar1_hp\" fore=\"L2UI_CH3.br_bar1_hp\"></td>");
+        }
+        else {
+            tb.append("<td width=\"16\"><button action=\"bypass -h autohppots\" width=24 height=12 back=\"L2UI_CH3.br_bar1_mp\" fore=\"L2UI_CH3.br_bar1_mp\"></td>");
+
+        }
+        tb.append("</tr>");
+        tb.append("<tr><td width=\"250\"><font color=\"00FF00\">By enabling that the use of healing potions will be automatic.</font></td></tr>");
+        tb.append("</table>");
+
+        tb.append("<table border=\"1\" width=\"250\" height=\"12\" bgcolor=\"000000\">");
+        tb.append("<tr>");
+        tb.append("<td align=\"center\" width=\"52\">Auto Mana Potions</td>");
+        if(activeChar.useAutoMPPots)
+            tb.append("<td width=\"16\"><button action=\"bypass -h automppots\" width=24 height=12 back=\"L2UI_CH3.br_bar1_hp\" fore=\"L2UI_CH3.br_bar1_hp\"></td>");
+        else
+            tb.append("<td width=\"16\"><button action=\"bypass -h automppots\" width=24 height=12 back=\"L2UI_CH3.br_bar1_mp\" fore=\"L2UI_CH3.br_bar1_mp\"></td>");
+        tb.append("</tr>");
+        tb.append("<tr><td width=\"250\"><font color=\"00FF00\">By enabling that the use of mana potions will be automatic.</font></td></tr>");
+        tb.append("</table>");
+
+        tb.append("<table border=\"1\" width=\"250\" height=\"12\" bgcolor=\"000000\">");
+        tb.append("<tr>");
+        tb.append("<td align=\"center\" width=\"52\">Auto CP Potions</td>");
+        if(activeChar.useAutoCPPots)
+            tb.append("<td width=\"16\"><button action=\"bypass -h autocppots\" width=24 height=12 back=\"L2UI_CH3.br_bar1_hp\" fore=\"L2UI_CH3.br_bar1_hp\"></td>");
+        else
+            tb.append("<td width=\"16\"><button action=\"bypass -h autocppots\" width=24 height=12 back=\"L2UI_CH3.br_bar1_mp\" fore=\"L2UI_CH3.br_bar1_mp\"></td>");
+        tb.append("</tr>");
+        tb.append("<tr><td width=\"250\"><font color=\"00FF00\">By enabling that the use of cp potions will be automatic.</font></td></tr>");
+        tb.append("</table>");
+
         tb.append("<table border=\"1\" width=\"250\" height=\"12\" bgcolor=\"000000\">");
         tb.append("<tr>");
         tb.append("<td align=\"center\" width=\"52\">Buff Protection</td>");
@@ -61,6 +99,7 @@ public class Menu implements IVoicedCommandHandler
         tb.append("</tr>");
         tb.append("<tr><td width=\"250\"><font color=\"00FF00\">By enabling that you won't be able to recieve ANY buff from another character.</font></td></tr>");
         tb.append("</table>");
+
         tb.append("<table border=\"1\" width=\"250\" height=\"12\" bgcolor=\"000000\">");
         tb.append("<tr>");
         tb.append("<td align=\"center\" width=\"52\">Personal Message Refusal</td>");

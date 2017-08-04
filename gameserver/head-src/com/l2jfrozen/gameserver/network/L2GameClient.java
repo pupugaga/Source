@@ -31,6 +31,8 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.l2jfrozen.gameserver.model.actor.instance.L2ArenaManagerInstance;
+import com.l2jfrozen.gameserver.model.scripts.ArenaFight;
 import javolution.util.FastList;
 
 import org.apache.log4j.Logger;
@@ -650,7 +652,32 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 			final String text = "Client " + toString() + " disconnected abnormally.";
 			Log.add(text, "Chars_disconnection_logs");
 		}
-		
+
+		if (L2ArenaManagerInstance.participants.contains(this.activeChar))
+		{
+			L2ArenaManagerInstance.participants.remove(this.activeChar);
+		}
+		if (L2ArenaManagerInstance.participantsLobby.contains(this.activeChar))
+		{
+			L2ArenaManagerInstance.participantsLobby.remove(this.activeChar);
+		}
+
+		if (L2ArenaManagerInstance.inFightOrWaiting.contains(this.activeChar)){
+
+			for (ArenaFight a : L2ArenaManagerInstance.fights){
+
+				for (L2PcInstance p : a.getFighters()){
+
+					if (p.getName() == this.activeChar.getName()){
+						a.endGame();
+						return;
+					}
+				}
+			}
+
+		}
+
+
 		// the force operation will allow to not save client position to prevent again criticals
 		// and stuck
 		closeNow();
@@ -914,6 +941,31 @@ public final class L2GameClient extends MMOClient<MMOConnection<L2GameClient>> i
 				L2PcInstance player = L2GameClient.this.getActiveChar();
 				if (player != null) // this should only happen on connection loss
 				{
+
+					if (L2ArenaManagerInstance.inFightOrWaiting.contains(player)){
+
+						for (ArenaFight a : L2ArenaManagerInstance.fights){
+
+							for (L2PcInstance p : a.getFighters()){
+
+								if (p.getName() == player.getName()){
+									a.endGame();
+									return;
+								}
+							}
+						}
+
+					}
+
+					if (L2ArenaManagerInstance.participants.contains(player))
+					{
+						L2ArenaManagerInstance.participants.remove(player);
+					}
+					if (L2ArenaManagerInstance.participantsLobby.contains(player))
+					{
+						L2ArenaManagerInstance.participantsLobby.remove(player);
+					}
+
 					// Olympiad crash DEBUG
 					if (Config.ENABLE_OLYMPIAD_DISCONNECTION_DEBUG)
 					{

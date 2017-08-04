@@ -26,6 +26,15 @@ import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 
+import com.l2jfrozen.gameserver.datatables.sql.NpcTable;
+import com.l2jfrozen.gameserver.datatables.sql.SpawnTable;
+import com.l2jfrozen.gameserver.managers.GrandBossManager;
+import com.l2jfrozen.gameserver.managers.RaidBossSpawnManager;
+import com.l2jfrozen.gameserver.model.actor.instance.L2NpcInstance;
+import com.l2jfrozen.gameserver.model.entity.Announcements;
+import com.l2jfrozen.gameserver.model.scripts.ArenaFight;
+import com.l2jfrozen.gameserver.model.spawn.L2Spawn;
+import com.l2jfrozen.gameserver.templates.L2NpcTemplate;
 import org.apache.log4j.Logger;
 
 import com.l2jfrozen.Config;
@@ -225,7 +234,9 @@ public final class Say2 extends L2GameClientPacket
 		{
 			checkText(activeChar);
 		}
-		
+
+
+
 		if (PowerPakConfig.ENABLE_SAY_SOCIAL_ACTIONS && !activeChar.isAlikeDead() && !activeChar.isDead())
 		{
 			if ((_text.equalsIgnoreCase("hello") || _text.equalsIgnoreCase("hey") || _text.equalsIgnoreCase("aloha") || _text.equalsIgnoreCase("alo") || _text.equalsIgnoreCase("ciao") || _text.equalsIgnoreCase("hi")) && (!activeChar.isRunning() || !activeChar.isAttackingNow() || !activeChar.isCastingNow() || !activeChar.isCastingPotionNow()))

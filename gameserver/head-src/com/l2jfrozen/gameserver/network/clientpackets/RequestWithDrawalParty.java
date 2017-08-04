@@ -20,10 +20,13 @@
  */
 package com.l2jfrozen.gameserver.network.clientpackets;
 
+import com.l2jfrozen.gameserver.datatables.csv.MapRegionTable;
+import com.l2jfrozen.gameserver.model.L2Character;
 import com.l2jfrozen.gameserver.model.L2Party;
 import com.l2jfrozen.gameserver.model.PartyMatchRoom;
 import com.l2jfrozen.gameserver.model.PartyMatchRoomList;
 import com.l2jfrozen.gameserver.model.actor.instance.L2PcInstance;
+import com.l2jfrozen.gameserver.model.zone.type.L2PartyPvPZone;
 import com.l2jfrozen.gameserver.network.serverpackets.ExClosePartyRoom;
 import com.l2jfrozen.gameserver.network.serverpackets.ExPartyRoomMember;
 import com.l2jfrozen.gameserver.network.serverpackets.PartyMatchDetail;
@@ -47,6 +50,7 @@ public final class RequestWithDrawalParty extends L2GameClientPacket
 		
 		if (party != null)
 		{
+			L2Party pt = player.getParty();
 			if (party.isInDimensionalRift() && !party.getDimensionalRift().getRevivedAtWaitingRoom().contains(player))
 				player.sendMessage("You can't exit party when you are in Dimensional Rift.");
 			else
@@ -66,6 +70,24 @@ public final class RequestWithDrawalParty extends L2GameClientPacket
 					}
 					player.setPartyRoom(0);
 					player.broadcastUserInfo();
+				}
+			}
+
+			// Player is inside Party PvP and try to leave
+			if(player.isInsideZone(L2Character.ZONE_PARTYPVP) && pt.getMemberCount() < 4)
+			{
+				player.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+
+				if (L2PartyPvPZone.partiesInside.containsKey(player.getParty()))
+				{
+					L2PartyPvPZone.partiesInside.remove(player.getParty());
+				}
+				for (L2PcInstance p : pt.getPartyMembers())
+				{
+					if (p == null)
+						continue;
+					p.setInsideZone(L2Character.ZONE_PARTYPVP, false);
+					p.teleToLocation(MapRegionTable.TeleportWhereType.Town);
 				}
 			}
 		}

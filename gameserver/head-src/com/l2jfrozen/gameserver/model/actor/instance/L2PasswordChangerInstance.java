@@ -103,7 +103,7 @@ public class L2PasswordChangerInstance extends L2FolkInstance
         NpcHtmlMessage nhm = new NpcHtmlMessage(5);
         TextBuilder replyMSG = new TextBuilder("");
 
-        replyMSG.append("<html><title>L2 InStadia Account Manager</title>");
+        replyMSG.append("<html><title>L2-Bezaleel Account Manager</title>");
         replyMSG.append("<body><center>");
         replyMSG.append("To change your password:<br1> First fill in your current password and then your new!</font><br>");
         replyMSG.append("Current Password: <edit var=\"cur\" width=100 height=15><br>");

@@ -4991,10 +4991,10 @@ public class SevenSignsFestival implements SpawnListener
 					npcSpawn.setRespawnDelay(respawnDelay);
 					
 					// Needed as doSpawn() is required to be called also for the NpcInstance it returns.
-					npcSpawn.startRespawn();
+					//npcSpawn.startRespawn();
 					
-					SpawnTable.getInstance().addNewSpawn(npcSpawn, false);
-					final L2FestivalMonsterInstance festivalMob = (L2FestivalMonsterInstance) npcSpawn.doSpawn();
+					//SpawnTable.getInstance().addNewSpawn(npcSpawn, false);
+					final L2FestivalMonsterInstance festivalMob = null;// = (L2FestivalMonsterInstance) npcSpawn.doSpawn();
 					
 					// Set the offering bonus to 2x or 5x the amount per kill,
 					// if this spawn is part of an increased challenge or is a festival chest.

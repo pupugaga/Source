@@ -22,6 +22,10 @@ package com.l2jfrozen.gameserver.network.clientpackets;
 
 import java.util.Arrays;
 
+import com.l2jfrozen.gameserver.model.actor.instance.L2ArenaManagerInstance;
+import com.l2jfrozen.gameserver.model.scripts.ArenaFight;
+import com.l2jfrozen.gameserver.network.serverpackets.*;
+import com.l2jfrozen.gameserver.templates.*;
 import org.apache.log4j.Logger;
 
 import com.l2jfrozen.Config;
@@ -37,16 +41,6 @@ import com.l2jfrozen.gameserver.model.L2Object;
 import com.l2jfrozen.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2jfrozen.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jfrozen.gameserver.network.SystemMessageId;
-import com.l2jfrozen.gameserver.network.serverpackets.ActionFailed;
-import com.l2jfrozen.gameserver.network.serverpackets.EtcStatusUpdate;
-import com.l2jfrozen.gameserver.network.serverpackets.InventoryUpdate;
-import com.l2jfrozen.gameserver.network.serverpackets.ItemList;
-import com.l2jfrozen.gameserver.network.serverpackets.ShowCalculator;
-import com.l2jfrozen.gameserver.network.serverpackets.SystemMessage;
-import com.l2jfrozen.gameserver.network.serverpackets.UserInfo;
-import com.l2jfrozen.gameserver.templates.L2Item;
-import com.l2jfrozen.gameserver.templates.L2Weapon;
-import com.l2jfrozen.gameserver.templates.L2WeaponType;
 import com.l2jfrozen.gameserver.util.Util;
 import com.l2jfrozen.gameserver.model.L2Character;
 import com.l2jfrozen.gameserver.model.zone.type.L2MultiFunctionZone;
@@ -76,6 +70,7 @@ public final class UseItem extends L2GameClientPacket {
             return;
         }
 
+
         // Like L2OFF you can't use soulshots while sitting
         final int[] shots_ids =
                 {
@@ -100,10 +95,16 @@ public final class UseItem extends L2GameClientPacket {
                         3951,
                         3952
                 };
+
         if (activeChar.isSitting() && Arrays.toString(shots_ids).contains(String.valueOf(item.getItemId()))) {
             final SystemMessage sm = new SystemMessage(SystemMessageId.CANNOT_AUTO_USE_LACK_OF_S1);
             sm.addItemName(item.getItemId());
             activeChar.sendPacket(sm);
+            return;
+        }
+
+        if (L2ArenaManagerInstance.inFightOrWaiting.contains(activeChar) && !Arrays.toString(shots_ids).contains(String.valueOf(item.getItemId()))){
+            activeChar.sendMessage("You can't use items there.");
             return;
         }
 
@@ -154,6 +155,17 @@ public final class UseItem extends L2GameClientPacket {
 		 * Island 7555 Scroll of Escape to Elven Village 7556 Scroll of Escape to Dark Elf Village 7557 Scroll of Escape to Orc Village 7558 Scroll of Escape to Dwarven Village 7559 Scroll of Escape to Giran Castle Town 7618 Scroll of Escape - Ketra Orc Village 7619 Scroll of Escape - Varka Silenos
 		 * Village 10129 Scroll of Escape : Fortress 10130 Blessed Scroll of Escape : Fortress
 		 */
+        if (Config.ENABLE_ANTI_HEAVY && item.getItemType() == L2ArmorType.HEAVY) {
+            if (activeChar.getClassId().getId() == 48 || activeChar.getClassId().getId() == 114 || activeChar.getClassId().getId() == 109
+                    || activeChar.getClassId().getId() == 37 || activeChar.getClassId().getId() == 108 || activeChar.getClassId().getId() == 36
+                    || activeChar.getClassId().getId() == 102 || activeChar.getClassId().getId() == 24 || activeChar.getClassId().getId() == 101
+                    || activeChar.getClassId().getId() == 23 || activeChar.getClassId().getId() == 93 || activeChar.getClassId().getId() == 8
+                    || activeChar.getClassId().getId() == 92 || activeChar.getClassId().getId() == 9) {
+                			activeChar.sendMessage("Your class can't equip heavy type armors.");
+                return;
+            }
+            	}
+
         if (!Config.ALT_GAME_KARMA_PLAYER_CAN_TELEPORT && activeChar.getKarma() > 0 && (itemId == 736 || itemId == 1538 || itemId == 1829 || itemId == 1830 || itemId == 3958 || itemId == 5858 || itemId == 5859 || itemId == 6663 || itemId == 6664 || itemId >= 7117 && itemId <= 7135 || itemId >= 7554 && itemId <= 7559 || itemId == 7618 || itemId == 7619 || itemId == 10129 || itemId == 10130))
             return;
 
@@ -167,6 +179,29 @@ public final class UseItem extends L2GameClientPacket {
         } else if ((itemId == 5859) && (CastleManager.getInstance().getCastleByOwner(activeChar.getClan()) == null)) {
             activeChar.sendMessage("Blessed Scroll of Escape: Castle cannot be used due to unsuitable terms.");
             return;
+        }
+
+        L2Weapon curwep = activeChar.getActiveWeaponItem();
+        if (curwep != null) {
+            if ((curwep.getItemType() == L2WeaponType.DUAL) && (item.getItemType() == L2WeaponType.NONE)) {
+                activeChar.sendMessage("You are not allowed to do this.");
+                return;
+            } else if ((curwep.getItemType() == L2WeaponType.BOW) && (item.getItemType() == L2WeaponType.NONE)) {
+                activeChar.sendMessage("You are not allowed to do this.");
+                return;
+            } else if ((curwep.getItemType() == L2WeaponType.BIGBLUNT) && (item.getItemType() == L2WeaponType.NONE)) {
+                activeChar.sendMessage("You are not allowed to do this.");
+                return;
+            } else if ((curwep.getItemType() == L2WeaponType.BIGSWORD) && (item.getItemType() == L2WeaponType.NONE)) {
+                activeChar.sendMessage("You are not allowed to do this.");
+                return;
+            } else if ((curwep.getItemType() == L2WeaponType.POLE) && (item.getItemType() == L2WeaponType.NONE)) {
+                activeChar.sendMessage("You are not allowed to do this.");
+                return;
+            } else if ((curwep.getItemType() == L2WeaponType.DUALFIST) && (item.getItemType() == L2WeaponType.NONE)) {
+                activeChar.sendMessage("You are not allowed to do this.");
+                return;
+            }
         }
 
         if (activeChar.isFishing() && (itemId < 6535 || itemId > 6540)) {

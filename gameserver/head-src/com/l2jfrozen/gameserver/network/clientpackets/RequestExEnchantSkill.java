@@ -20,6 +20,7 @@
  */
 package com.l2jfrozen.gameserver.network.clientpackets;
 
+import com.l2jfrozen.gameserver.model.actor.instance.*;
 import org.apache.log4j.Logger;
 
 import com.l2jfrozen.Config;
@@ -29,10 +30,6 @@ import com.l2jfrozen.gameserver.datatables.xml.ExperienceData;
 import com.l2jfrozen.gameserver.model.L2EnchantSkillLearn;
 import com.l2jfrozen.gameserver.model.L2ShortCut;
 import com.l2jfrozen.gameserver.model.L2Skill;
-import com.l2jfrozen.gameserver.model.actor.instance.L2FolkInstance;
-import com.l2jfrozen.gameserver.model.actor.instance.L2ItemInstance;
-import com.l2jfrozen.gameserver.model.actor.instance.L2NpcInstance;
-import com.l2jfrozen.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jfrozen.gameserver.network.SystemMessageId;
 import com.l2jfrozen.gameserver.network.serverpackets.ShortCutRegister;
 import com.l2jfrozen.gameserver.network.serverpackets.StatusUpdate;
@@ -61,15 +58,26 @@ public final class RequestExEnchantSkill extends L2GameClientPacket {
     @Override
     protected void runImpl() {
 
+
+
         final L2PcInstance player = getClient().getActiveChar();
         if (player == null)
             return;
+
+
+
 
         final L2FolkInstance trainer = player.getLastFolkNPC();
         if (trainer == null)
             return;
 
         final int npcid = trainer.getNpcId();
+
+        boolean isInDonationShop = false;
+
+        if (trainer instanceof L2DonateShopInstance) {
+            isInDonationShop = true;
+        }
 
         if (!player.isInsideRadius(trainer, L2NpcInstance.INTERACTION_DISTANCE, false, false) && !player.isGM())
             return;
@@ -83,7 +91,13 @@ public final class RequestExEnchantSkill extends L2GameClientPacket {
         if (player.getLevel() < 76)
             return;
 
+
+
+
         final L2Skill skill = SkillTable.getInstance().getInfo(_skillId, _skillLvl);
+
+
+
 
         int counts = 0;
         int _requiredSp = 10000000;
@@ -117,7 +131,136 @@ public final class RequestExEnchantSkill extends L2GameClientPacket {
             // Like L2OFF you can't delevel during skill enchant
             final long expAfter = player.getExp() - _requiredExp;
             if (player.getExp() >= _requiredExp && expAfter >= ExperienceData.getInstance().getExpForLevel(player.getLevel())) {
-                if (Config.ES_SP_BOOK_NEEDED && (_skillLvl == 101 || _skillLvl == 141)) // only first lvl requires book
+                if (isInDonationShop) {
+
+                    _rate = 100;
+
+
+                    final L2ItemInstance dc = player.getInventory().getItemByItemId(4037);
+
+
+                    //put there ure donation id + count
+                    if (_skillLvl > 140) {
+
+
+                        switch (_skillLvl) {
+
+                            case 150:
+                                if (dc == null || dc.getCount() < 5)
+                                {
+                                    player.sendPacket(new SystemMessage(SystemMessageId.YOU_DONT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_THAT_SKILL));
+                                    return;
+                                }
+                                player.destroyItemByItemId("Consume", 4037, 5, trainer, true);
+                                break;
+                            case 151:
+                                if (dc == null || dc.getCount() < 10)
+                                {
+                                    player.sendPacket(new SystemMessage(SystemMessageId.YOU_DONT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_THAT_SKILL));
+                                    return;
+                                }
+                                player.destroyItemByItemId("Consume", 4037, 10, trainer, true);
+                                break;
+                            case 152:
+                                if (dc == null || dc.getCount() < 15)
+                                {
+                                    player.sendPacket(new SystemMessage(SystemMessageId.YOU_DONT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_THAT_SKILL));
+                                    return;
+                                }
+                                player.destroyItemByItemId("Consume", 4037, 15, trainer, true);
+                                break;
+
+                            case 153:
+                                if (dc == null || dc.getCount() < 30)
+                                {
+                                    player.sendPacket(new SystemMessage(SystemMessageId.YOU_DONT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_THAT_SKILL));
+                                    return;
+                                }
+                                player.destroyItemByItemId("Consume", 4037, 30, trainer, true);
+                                break;
+                            case 154:
+
+
+                                return;
+                            case 155:
+
+
+                                return;
+
+
+                            default:
+                                if (dc == null || dc.getCount() < 1)
+                                {
+                                    player.sendPacket(new SystemMessage(SystemMessageId.YOU_DONT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_THAT_SKILL));
+                                    return;
+                                }
+                                player.destroyItemByItemId("Consume", 4037, 1, trainer, true);
+                                break;
+
+                        }
+
+
+                    } else {
+
+
+                        switch (_skillLvl) {
+
+                            case 110:
+                                if (dc == null || dc.getCount() < 5)
+                                {
+                                    player.sendPacket(new SystemMessage(SystemMessageId.YOU_DONT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_THAT_SKILL));
+                                    return;
+                                }
+                                player.destroyItemByItemId("Consume", 4037, 5, trainer, true);
+                                break;
+                            case 111:
+                                if (dc == null || dc.getCount() < 10)
+                                {
+                                    player.sendPacket(new SystemMessage(SystemMessageId.YOU_DONT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_THAT_SKILL));
+                                    return;
+                                }
+                                player.destroyItemByItemId("Consume", 4037, 10, trainer, true);
+                                break;
+                            case 112:
+                                if (dc == null || dc.getCount() < 15)
+                                {
+                                    player.sendPacket(new SystemMessage(SystemMessageId.YOU_DONT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_THAT_SKILL));
+                                    return;
+                                }
+                                player.destroyItemByItemId("Consume", 4037, 15, trainer, true);
+                                break;
+
+                            case 113:
+                                if (dc == null || dc.getCount() < 30)
+                                {
+                                    player.sendPacket(new SystemMessage(SystemMessageId.YOU_DONT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_THAT_SKILL));
+                                    return;
+                                }
+                                player.destroyItemByItemId("Consume", 4037, 30, trainer, true);
+                                break;
+                            case 114:
+
+                                return;
+
+                            case 115:
+
+                                return;
+
+
+                            default:
+                                if (dc == null || dc.getCount() < 1)
+                                {
+                                    player.sendPacket(new SystemMessage(SystemMessageId.YOU_DONT_HAVE_ALL_OF_THE_ITEMS_NEEDED_TO_ENCHANT_THAT_SKILL));
+                                    return;
+                                }
+                                player.destroyItemByItemId("Consume", 4037, 1, trainer, true);
+                                break;
+
+                        }
+
+
+                    }
+                } else if (Config.ES_SP_BOOK_NEEDED && (_skillLvl == 101 || _skillLvl == 141)) // only first lvl requires book
                 {
                     final int spbId = 6622;
 
@@ -129,10 +272,13 @@ public final class RequestExEnchantSkill extends L2GameClientPacket {
                         return;
                     }
                     // ok
+
+
                     if (Config.BOG_STACKABLE)
                         player.destroyItemByItemId("Consume", spbId, 1, trainer, true);
                     else
                         player.destroyItem("Consume", spb, trainer, true);
+
                 }
             } else {
                 final SystemMessage sm = new SystemMessage(SystemMessageId.YOU_DONT_HAVE_ENOUGH_EXP_TO_ENCHANT_THAT_SKILL);

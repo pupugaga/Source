@@ -24,6 +24,9 @@ package com.l2jfrozen.gameserver.network;
  */
 public enum SystemMessageId
 {
+
+	YOU_CANNOT_ENCHANT(0),
+
 	/**
 	 * ID: 1<br>
 	 * Message: The server will be coming down in $1 seconds. Please find a safe place to LOGGER out.

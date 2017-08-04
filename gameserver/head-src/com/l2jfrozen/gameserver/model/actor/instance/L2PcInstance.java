@@ -43,6 +43,9 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
+import com.l2jfrozen.gameserver.managers.*;
+import com.l2jfrozen.gameserver.model.scripts.ArenaFight;
+import com.l2jfrozen.gameserver.model.zone.type.L2PartyPvPZone;
 import javolution.text.TextBuilder;
 import javolution.util.FastList;
 import javolution.util.FastMap;
@@ -85,16 +88,6 @@ import com.l2jfrozen.gameserver.handler.admincommandhandlers.AdminEditChar;
 import com.l2jfrozen.gameserver.handler.skillhandlers.SiegeFlag;
 import com.l2jfrozen.gameserver.handler.skillhandlers.StrSiegeAssault;
 import com.l2jfrozen.gameserver.handler.skillhandlers.TakeCastle;
-import com.l2jfrozen.gameserver.managers.CastleManager;
-import com.l2jfrozen.gameserver.managers.CoupleManager;
-import com.l2jfrozen.gameserver.managers.CursedWeaponsManager;
-import com.l2jfrozen.gameserver.managers.DimensionalRiftManager;
-import com.l2jfrozen.gameserver.managers.DuelManager;
-import com.l2jfrozen.gameserver.managers.FortSiegeManager;
-import com.l2jfrozen.gameserver.managers.ItemsOnGroundManager;
-import com.l2jfrozen.gameserver.managers.QuestManager;
-import com.l2jfrozen.gameserver.managers.SiegeManager;
-import com.l2jfrozen.gameserver.managers.TownManager;
 import com.l2jfrozen.gameserver.model.BlockList;
 import com.l2jfrozen.gameserver.model.FishData;
 import com.l2jfrozen.gameserver.model.Inventory;
@@ -485,7 +478,7 @@ public final class L2PcInstance extends L2PlayableInstance {
      * =?,race=?,classid=?,deletetime=?,title=?,accesslevel=?,online=?,isin7sdungeon=?,clan_privs =?,wantspeace=?,base_class =?,onlinetime=?,in_jail=?,jail_timer=?,newbie=?,nobless=?,power_grade=?,subpledge=?,last_recom_date =?,lvl_joined_academy
      * =?,apprentice=?,sponsor=?,varka_ketra_ally=?,clan_join_expiry_time=?,clan_create_expiry_time=? ,char_name=?,death_penalty_level=?,good=?,evil=?,gve_kills=? WHERE obj_id=?.
      */
-    private static final String UPDATE_CHARACTER = "UPDATE characters SET level=?,maxHp=?,curHp=?,maxCp=?,curCp=?,maxMp=?,curMp=?,str=?,con=?,dex=?,_int=?,men=?,wit=?,face=?,hairStyle=?,hairColor=?,heading=?,x=?,y=?,z=?,exp=?,expBeforeDeath=?,sp=?,karma=?,pvpkills=?,pkkills=?,rec_have=?,rec_left=?,clanid=?,maxload=?,race=?,classid=?,deletetime=?,title=?,accesslevel=?,online=?,isin7sdungeon=?,clan_privs=?,wantspeace=?,base_class=?,onlinetime=?,punish_level=?,punish_timer=?,newbie=?,nobless=?,power_grade=?,subpledge=?,last_recom_date=?,lvl_joined_academy=?,apprentice=?,sponsor=?,varka_ketra_ally=?,clan_join_expiry_time=?,clan_create_expiry_time=?,char_name=?,death_penalty_level=?,pc_point=?,name_color=?,title_color=?,aio=?,aio_end=? WHERE obj_id=?";
+    private static final String UPDATE_CHARACTER = "UPDATE characters SET level=?,maxHp=?,curHp=?,maxCp=?,curCp=?,maxMp=?,curMp=?,str=?,con=?,dex=?,_int=?,men=?,wit=?,face=?,hairStyle=?,hairColor=?,sex=?,heading=?,x=?,y=?,z=?,exp=?,expBeforeDeath=?,sp=?,karma=?,pvpkills=?,pkkills=?,rec_have=?,rec_left=?,clanid=?,maxload=?,race=?,classid=?,deletetime=?,title=?,accesslevel=?,online=?,isin7sdungeon=?,clan_privs=?,wantspeace=?,base_class=?,onlinetime=?,punish_level=?,punish_timer=?,newbie=?,nobless=?,power_grade=?,subpledge=?,last_recom_date=?,lvl_joined_academy=?,apprentice=?,sponsor=?,varka_ketra_ally=?,clan_join_expiry_time=?,clan_create_expiry_time=?,char_name=?,death_penalty_level=?,pc_point=?,name_color=?,title_color=?,aio=?,aio_end=? WHERE obj_id=?";
 
     /**
      * SELECT account_name, obj_Id, char_name, level, maxHp, curHp, maxCp, curCp, maxMp, curMp, acc, crit, evasion, mAtk, mDef, mSpd, pAtk, pDef, pSpd, runSpd, walkSpd, str, con, dex, _int, men, wit, face, hairStyle, hairColor, sex, heading, x, y, z, movement_multiplier, attack_speed_multiplier,
@@ -3200,6 +3193,68 @@ public final class L2PcInstance extends L2PlayableInstance {
         _pkKills = pkKills;
     }
 
+
+    public boolean useAutoHPPots = false;
+
+    private Map<Integer, Future<?>> _autoHPTasks = new HashMap<>();
+
+    public boolean isAutoHPPot(int id)
+    {
+        return _autoHPTasks.keySet().contains(id);
+    }
+
+    public void setAutoHPPot(int id, Future<?> task, boolean add)
+    {
+        if (add)
+            _autoHPTasks.put(id, task);
+        else
+        {
+            _autoHPTasks.get(id).cancel(false);
+            _autoHPTasks.remove(id);
+        }
+    }
+
+    public boolean useAutoMPPots = false;
+
+    private Map<Integer, Future<?>> _autoMPTasks = new HashMap<>();
+
+    public boolean isAutoMPPot(int id)
+    {
+        return _autoMPTasks.keySet().contains(id);
+    }
+
+    public void setAutoMPPot(int id, Future<?> task, boolean add)
+    {
+        if (add)
+            _autoMPTasks.put(id, task);
+        else
+        {
+            _autoMPTasks.get(id).cancel(false);
+            _autoMPTasks.remove(id);
+        }
+    }
+
+    public boolean useAutoCPPots = false;
+
+    private Map<Integer, Future<?>> _autoCPTasks = new HashMap<>();
+
+    public boolean isAutoCPPot(int id)
+    {
+        return _autoCPTasks.keySet().contains(id);
+    }
+
+    public void setAutoCPPot(int id, Future<?> task, boolean add)
+    {
+        if (add)
+            _autoCPTasks.put(id, task);
+        else
+        {
+            _autoCPTasks.get(id).cancel(false);
+            _autoCPTasks.remove(id);
+        }
+    }
+
+
     /**
      * Return the _deleteTimer of the L2PcInstance.<BR>
      * <BR>
@@ -3882,6 +3937,7 @@ public final class L2PcInstance extends L2PlayableInstance {
     public void checkSSMatch(final L2ItemInstance equipped, final L2ItemInstance unequipped) {
         if (unequipped == null)
             return;
+
 
         if (unequipped.getItem().getType2() == L2Item.TYPE2_WEAPON && (equipped == null ? true : equipped.getItem().getCrystalType() != unequipped.getItem().getCrystalType()))
         // && getInventory().getItem() != null - must be fixed.
@@ -7398,6 +7454,50 @@ public final class L2PcInstance extends L2PlayableInstance {
                 }
             }
 
+            if (L2ArenaManagerInstance.inFightOrWaiting.contains(this) && L2ArenaManagerInstance.inFightOrWaiting.contains(killer))
+            {
+                ArenaFight arena = null;
+                for (ArenaFight a : L2ArenaManagerInstance.fights)
+                {
+                    for (L2PcInstance p : a.getFighters())
+                    {
+                        if (p.getName() == killer.getName() || p.getName() == this.getName())
+                        {
+                            arena = a;
+                        }
+                    }
+                }
+
+                if (arena == null)
+                {
+                    //Arena not found
+                    return false;
+                }
+
+                if (arena.isStarted)
+                    arena.endGame();
+
+
+                Announcements.getInstance().announceToAll("Winner : " + killer);
+                this.setArenasInfos("arena_loses", this.getArenaInfos("arena_loses") + 1);
+                ((L2PcInstance)killer).setArenasInfos("arena_wins", ((L2PcInstance)killer).getArenaInfos("arena_wins") + 1);
+            }
+
+            if (this.isInsideZone(L2Character.ZONE_PARTYPVP) && killer.isInsideZone(L2Character.ZONE_PARTYPVP))
+            {
+                L2PartyPvPZone.pvpParty partyKiller = null;
+                L2PartyPvPZone.pvpParty partyVictim = null;
+
+                partyVictim = L2PartyPvPZone.partiesInside.get(this.getParty());
+                partyKiller = L2PartyPvPZone.partiesInside.get(killer.getParty());
+
+                if (partyKiller != null && partyVictim != null){
+                    partyKiller.addKill();
+                    partyVictim.addDeath();
+                }
+            }
+
+
             // Clear resurrect xp calculation
             setExpBeforeDeath(0);
 
@@ -7476,6 +7576,48 @@ public final class L2PcInstance extends L2PlayableInstance {
         }
 
         return true;
+    }
+
+    public int getArenaInfos(String value){
+
+        Connection get = null;
+        int wins = -1;
+
+        try
+        {
+            get = L2DatabaseFactory.getInstance().getConnection();
+            PreparedStatement statment = get.prepareStatement("SELECT " + value + " from characters WHERE obj_id = ?");
+            statment.setInt(1, this.getObjectId());
+            ResultSet rset = statment.executeQuery();
+
+            if (rset.next()){
+                wins = rset.getInt(value);
+            }
+            rset.close();
+            statment.close();
+            return wins;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public void setArenasInfos(String value, int amount){
+
+        Connection con = null;
+        try {
+
+            con = L2DatabaseFactory.getInstance().getConnection();
+            PreparedStatement statment = con.prepareStatement("UPDATE characters SET " + value + "=? WHERE obj_id=?");
+            statment.setInt(1, amount);
+            statment.setInt(2, this.getObjectId());
+            statment.execute();
+            statment.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -10057,42 +10199,49 @@ public final class L2PcInstance extends L2PlayableInstance {
             statement.setInt(14, getAppearance().getFace());
             statement.setInt(15, getAppearance().getHairStyle());
             statement.setInt(16, getAppearance().getHairColor());
-            statement.setInt(17, getHeading());
-            statement.setInt(18, _observerMode ? _obsX : getX());
-            statement.setInt(19, _observerMode ? _obsY : getY());
-            statement.setInt(20, _observerMode ? _obsZ : getZ());
-            statement.setLong(21, exp);
-            statement.setLong(22, getExpBeforeDeath());
-            statement.setInt(23, sp);
-            statement.setInt(24, getKarma());
-            statement.setInt(25, getPvpKills());
-            statement.setInt(26, getPkKills());
-            statement.setInt(27, getRecomHave());
-            statement.setInt(28, getRecomLeft());
-            statement.setInt(29, getClanId());
-            statement.setInt(30, getMaxLoad());
-            statement.setInt(31, getRace().ordinal());
+
+            if(getAppearance().getSex()) {
+                statement.setInt(17, 1);
+            }
+            else{
+                statement.setInt(17, 0);
+            }
+            statement.setInt(18, getHeading());
+            statement.setInt(19, _observerMode ? _obsX : getX());
+            statement.setInt(20, _observerMode ? _obsY : getY());
+            statement.setInt(21, _observerMode ? _obsZ : getZ());
+            statement.setLong(22, exp);
+            statement.setLong(23, getExpBeforeDeath());
+            statement.setInt(24, sp);
+            statement.setInt(25, getKarma());
+            statement.setInt(26, getPvpKills());
+            statement.setInt(27, getPkKills());
+            statement.setInt(28, getRecomHave());
+            statement.setInt(29, getRecomLeft());
+            statement.setInt(30, getClanId());
+            statement.setInt(31, getMaxLoad());
+            statement.setInt(32, getRace().ordinal());
 
             // if (!isSubClassActive())
 
             // else
             // statement.setInt(30, getBaseTemplate().race.ordinal());
 
-            statement.setInt(32, getClassId().getId());
-            statement.setLong(33, getDeleteTimer());
-            statement.setString(34, getTitle());
-            statement.setInt(35, getAccessLevel().getLevel());
+            statement.setInt(33, getClassId().getId());
+            statement.setLong(34, getDeleteTimer());
+            statement.setString(35, getTitle());
+            statement.setInt(36, getAccessLevel().getLevel());
 
             if (_isInOfflineMode || isOnline() == 1) { // in offline mode or online
-                statement.setInt(36, 1);
+                statement.setInt(37, 1);
             } else
-                statement.setInt(36, isOnline());
+                statement.setInt(37, isOnline());
 
             // statement.setInt(36, _isOffline ? 0 : isOnline());
-            statement.setInt(37, isIn7sDungeon() ? 1 : 0);
-            statement.setInt(38, getClanPrivileges());
-            statement.setInt(39, getWantsPeace());
-            statement.setInt(40, getBaseClass());
+            statement.setInt(38, isIn7sDungeon() ? 1 : 0);
+            statement.setInt(39, getClanPrivileges());
+            statement.setInt(40, getWantsPeace());
+            statement.setInt(41, getBaseClass());
 
             long totalOnlineTime = _onlineTime;
 
@@ -10100,37 +10249,37 @@ public final class L2PcInstance extends L2PlayableInstance {
                 totalOnlineTime += (System.currentTimeMillis() - _onlineBeginTime) / 1000;
             }
 
-            statement.setLong(41, totalOnlineTime);
+            statement.setLong(42, totalOnlineTime);
             // statement.setInt(42, isInJail() ? 1 : 0);
             // statement.setLong(43, getJailTimer());
-            statement.setInt(42, getPunishLevel().value());
-            statement.setLong(43, getPunishTimer());
-            statement.setInt(44, isNewbie() ? 1 : 0);
-            statement.setInt(45, isNoble() ? 1 : 0);
-            statement.setLong(46, getPowerGrade());
-            statement.setInt(47, getPledgeType());
-            statement.setLong(48, getLastRecomUpdate());
-            statement.setInt(49, getLvlJoinedAcademy());
-            statement.setLong(50, getApprentice());
-            statement.setLong(51, getSponsor());
-            statement.setInt(52, getAllianceWithVarkaKetra());
-            statement.setLong(53, getClanJoinExpiryTime());
-            statement.setLong(54, getClanCreateExpiryTime());
-            statement.setString(55, getName());
-            statement.setLong(56, getDeathPenaltyBuffLevel());
-            statement.setInt(57, getPcBangScore());
+            statement.setInt(43, getPunishLevel().value());
+            statement.setLong(44, getPunishTimer());
+            statement.setInt(45, isNewbie() ? 1 : 0);
+            statement.setInt(46, isNoble() ? 1 : 0);
+            statement.setLong(47, getPowerGrade());
+            statement.setInt(48, getPledgeType());
+            statement.setLong(49, getLastRecomUpdate());
+            statement.setInt(50, getLvlJoinedAcademy());
+            statement.setLong(51, getApprentice());
+            statement.setLong(52, getSponsor());
+            statement.setInt(53, getAllianceWithVarkaKetra());
+            statement.setLong(54, getClanJoinExpiryTime());
+            statement.setLong(55, getClanCreateExpiryTime());
+            statement.setString(56, getName());
+            statement.setLong(57, getDeathPenaltyBuffLevel());
+            statement.setInt(58, getPcBangScore());
 
-            statement.setString(58, StringToHex(Integer.toHexString(_originalNameColorOffline).toUpperCase()));
-            statement.setString(59, StringToHex(Integer.toHexString(getAppearance().getTitleColor()).toUpperCase()));
+            statement.setString(59, StringToHex(Integer.toHexString(_originalNameColorOffline).toUpperCase()));
+            statement.setString(60, StringToHex(Integer.toHexString(getAppearance().getTitleColor()).toUpperCase()));
 
             // TODO allow different colors support to players store
             // statement.setString(58, StringToHex(Integer.toHexString(getAppearance().getNameColor()).toUpperCase()));
             // statement.setString(59, StringToHex(Integer.toHexString(getAppearance().getTitleColor()).toUpperCase()));
 
-            statement.setInt(60, isAio() ? 1 : 0);
-            statement.setLong(61, getAioEndTime());
+            statement.setInt(61, isAio() ? 1 : 0);
+            statement.setLong(62, getAioEndTime());
 
-            statement.setInt(62, getObjectId());
+            statement.setInt(63, getObjectId());
 
             statement.execute();
             DatabaseUtils.close(statement);
@@ -10554,8 +10703,8 @@ public final class L2PcInstance extends L2PlayableInstance {
         }
     }
 
-    /**
-     * Retrieve from the database all skills of this L2PcInstance and add them to _skills.<BR>
+    /**base all ski
+     * Retrieve from the datalls of this L2PcInstance and add them to _skills.<BR>
      * <BR>
      */
     public synchronized void restoreSkills() {

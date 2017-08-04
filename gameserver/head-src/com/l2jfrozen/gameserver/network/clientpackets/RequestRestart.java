@@ -20,6 +20,8 @@
  */
 package com.l2jfrozen.gameserver.network.clientpackets;
 
+import com.l2jfrozen.gameserver.model.actor.instance.L2ArenaManagerInstance;
+import com.l2jfrozen.gameserver.model.scripts.ArenaFight;
 import org.apache.log4j.Logger;
 
 import com.l2jfrozen.Config;
@@ -123,7 +125,31 @@ public final class RequestRestart extends L2GameClientPacket
 			sendPacket(RestartResponse.valueOf(false));
 			return;
 		}
-		
+
+		if (L2ArenaManagerInstance.participants.contains(player))
+		{
+			L2ArenaManagerInstance.participants.remove(player);
+		}
+		if (L2ArenaManagerInstance.participantsLobby.contains(player))
+		{
+			L2ArenaManagerInstance.participantsLobby.remove(player);
+		}
+
+		if (L2ArenaManagerInstance.inFightOrWaiting.contains(player)){
+
+			for (ArenaFight a : L2ArenaManagerInstance.fights){
+
+				for (L2PcInstance p : a.getFighters()){
+
+					if (p.getName() == player.getName()){
+						a.endGame();
+						return;
+					}
+				}
+			}
+
+		}
+
 		// Prevent player from restarting if they are a festival participant
 		// and it is in progress, otherwise notify party members that the player
 		// is not longer a participant.

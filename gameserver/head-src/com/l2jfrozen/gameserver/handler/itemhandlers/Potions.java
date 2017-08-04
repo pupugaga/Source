@@ -141,7 +141,6 @@ public class Potions implements IItemHandler
 		725,
 		726,
 		727,
-		728,
 		733,
 		734,
 		735,
@@ -151,14 +150,12 @@ public class Potions implements IItemHandler
 		1073,
 		1374,
 		1375,
-		1539,
 		1540,
 		4667,
 		4679,
 		4680,
 		5283,
 		5591,
-		5592,
 		6035,
 		6036,
 		6652,
@@ -325,11 +322,6 @@ public class Potions implements IItemHandler
 				case 1375: // adv_swift_attack_potion, xml: 2035
 					usePotion(activeChar, 2035, 1);
 					break;
-				case 1539: // greater_healing_potion, xml: 2037
-					if (!isEffectReplaceable(playable, L2Effect.EffectType.HEAL_OVER_TIME, itemId))
-						return;
-					usePotion(activeChar, 2037, 1);
-					break;
 				case 1540: // quick_healing_potion, xml: 2038
 					usePotion(activeChar, 2038, 1);
 					break;
@@ -349,9 +341,6 @@ public class Potions implements IItemHandler
 					break;
 				case 5591: // CP
 					usePotion(activeChar, 2166, 1);
-					break;
-				case 5592: // Greater CP
-					usePotion(activeChar, 2166, 2);
 					break;
 				case 6035: // Magic Haste Potion, xml: 2169
 					usePotion(activeChar, 2169, 1);
@@ -598,9 +587,7 @@ public class Potions implements IItemHandler
 			switch (itemId)
 			{
 			// MANA POTIONS
-				case 728: // mana_potion, xml: 2005
-					usePotion(activeChar, 2005, 1);
-					break;
+
 				
 				// HEALING AND SPEED POTIONS
 				case 1060: // lesser_healing_potion,
@@ -616,11 +603,6 @@ public class Potions implements IItemHandler
 					break;
 				case 1062: // haste_potion, xml: 2011
 					usePotion(activeChar, 2011, 1);
-					break;
-				case 1539:
-					if (!isEffectReplaceable(playable, L2Effect.EffectType.HEAL_OVER_TIME, itemId))
-						return;
-					usePotion(activeChar, 2037, 1);
 					break;
 				case 6035: // Magic Haste Potion, xml: 2169
 					usePotion(activeChar, 2169, 1);
@@ -708,7 +690,7 @@ public class Potions implements IItemHandler
 						
 						return false;
 					}
-					
+
 					activeChar.doCast(skill);
 					
 					// only for Heal potions
@@ -768,7 +750,6 @@ public class Potions implements IItemHandler
 		
 		if (!possible_potions.isEmpty())
 		{
-			
 			for (final Integer potion : possible_potions)
 			{
 				
@@ -808,7 +789,6 @@ public class Potions implements IItemHandler
 							LOGGER.warn("Attention: playable " + playable.getName() + " has not potions " + potion + "!");
 					}
 				}
-				
 			}
 			
 		}
@@ -823,7 +803,6 @@ public class Potions implements IItemHandler
 	{
 		
 		mana_drug(726, 2003, 1),
-		mana_potion(728, 2005, 1),
 		red_potion(65, 2001, 1),
 		healing_drug(725, 2002, 1),
 		healing_potion_ring(727, 2032, 1),
@@ -835,7 +814,6 @@ public class Potions implements IItemHandler
 		haste_potion(1062, 2011, 1),
 		adv_quick_step_potion(1374, 2034, 1),
 		adv_swift_attack_potion(1375, 2035, 1),
-		greater_healing_potion(1539, 2037, 1),
 		quick_healing_potion(1540, 2038, 1),
 		bless_of_eva(4679, 2076, 1),
 		endeavor_potion(733, 2010, 1),
@@ -843,7 +821,6 @@ public class Potions implements IItemHandler
 		rsk_damage_shield_potion(4680, 2077, 1),
 		Rice_Cake(5283, 2136, 1),
 		CP(5591, 2166, 1),
-		Greater_CP(5592, 2166, 2),
 		Magic_Haste_Potion(6035, 2169, 1),
 		Greater_Magic_Haste_Potion(6036, 2169, 2),
 		elixir_of_Life_nog(8622, 2287, 1),

@@ -226,12 +226,16 @@ public class ZoneData {
                                     case "CustomZone":
                                         temp = new L2CustomZone(zoneId);
                                         break;
-                                    case "PartyPvP":
-                                        temp = new L2PartyPvPZone(zoneId);
-                                        break;
                                     case "SwampZone":
                                         temp = new L2SwampZone(zoneId);
                                         break;
+                                    case "PartyPvP":
+                                        temp = new L2PartyPvPZone(zoneId);
+                                        break;
+                                    case "PartyWaitingRoom":
+                                        temp = new L2PartyWaitingRoomZone(zoneId);
+                                        break;
+
                                 }
 
                                 // Check for unknown type

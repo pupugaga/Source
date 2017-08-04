@@ -77,11 +77,13 @@ public class L2MultiFunctionZone extends L2ZoneType {
 
 
         if (character instanceof L2PcInstance) {
+
             L2PcInstance activeChar = ((L2PcInstance) character);
             if (classes != null && classes.contains("" + activeChar.getClassId().getId())) {
-                activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
-                //activeChar.teleToLocation(82710, 148595, -3495);
+
+                activeChar.disableAllSkills();
                 activeChar.sendMessage("Your class is not allowed in the MultiFunction zone.");
+                activeChar.sendMessage("Your skills are disabled.");
                 return;
             }
 
@@ -99,6 +101,7 @@ public class L2MultiFunctionZone extends L2ZoneType {
             if (pvp_enabled)
                 activeChar.updatePvPFlag(1);
         }
+
     }
 
     @Override
@@ -108,10 +111,11 @@ public class L2MultiFunctionZone extends L2ZoneType {
 
         if (character instanceof L2PcInstance) {
             L2PcInstance activeChar = ((L2PcInstance) character);
-            activeChar.sendMessage("You left from a MultiFunction zone.");
+            activeChar.enableAllSkills();
+            activeChar.sendMessage("You left MultiFunction zone.");
 
             if (pvp_enabled)
-                activeChar.stopPvPFlag();
+                activeChar.startPvPFlag();
         }
     }
 

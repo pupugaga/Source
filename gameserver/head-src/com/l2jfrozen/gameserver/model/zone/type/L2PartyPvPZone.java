@@ -2,9 +2,11 @@ package com.l2jfrozen.gameserver.model.zone.type;
 
 import com.l2jfrozen.gameserver.datatables.csv.MapRegionTable;
 import com.l2jfrozen.gameserver.model.L2Character;
+import com.l2jfrozen.gameserver.model.L2Party;
 import com.l2jfrozen.gameserver.model.actor.instance.L2ItemInstance;
 import com.l2jfrozen.gameserver.model.actor.instance.L2NpcInstance;
 import com.l2jfrozen.gameserver.model.actor.instance.L2PcInstance;
+import com.l2jfrozen.gameserver.model.actor.instance.L2PlayableInstance;
 import com.l2jfrozen.gameserver.model.zone.L2ZoneType;
 import com.l2jfrozen.util.L2FastList;
 import javolution.util.FastMap;
@@ -22,6 +24,7 @@ public class L2PartyPvPZone extends L2ZoneType
 {
     final static int minimumPlayers = 4;
 
+    public static HashMap<L2Party, pvpParty> partiesInside = new HashMap<L2Party, pvpParty>();
     private String _zoneName;
     private int _timeInvade;
     private boolean _enabled = true; // default value, unless overridden by xml...
@@ -79,19 +82,24 @@ public class L2PartyPvPZone extends L2ZoneType
             return false;
         }
 
-        if (!player.isInParty())
+        if (!player.isInParty() && !player.isGM())
         {
             player.sendMessage("You have to be in party of minimum " + minimumPlayers + " players in order to enter in this zone !");
             player.teleToLocation(MapRegionTable.TeleportWhereType.Town);
             return false;
         }
 
-        if (player.isInParty() && player.getParty().getMemberCount() < minimumPlayers)
+        if (player.isInParty() && player.getParty().getMemberCount() < minimumPlayers && !player.isGM())
         {
             for (L2PcInstance p : player.getParty().getPartyMembers())
             {
                 if (p == null)
                     continue;
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 p.sendMessage("You have to be in a party of minimum " + minimumPlayers + " in order ot enter in this zone !");
                 p.teleToLocation(MapRegionTable.TeleportWhereType.Town);
             }
@@ -99,6 +107,22 @@ public class L2PartyPvPZone extends L2ZoneType
         }
 
         return true;
+    }
+
+    public void registerParty(L2Party party, int id)
+    {
+        if (!partiesInside.containsKey(party))
+        {
+            partiesInside.put(party, new pvpParty(id, party));
+        }
+    }
+
+    public void removeParty(L2Party party)
+    {
+        if (partiesInside.containsKey(party))
+        {
+            partiesInside.remove(party);
+        }
     }
 
     @Override
@@ -115,7 +139,6 @@ public class L2PartyPvPZone extends L2ZoneType
      * That is if the server recently rebooted (boot-up time more recent than
      * currentTime - _timeInvade) AND the player was in the zone prior to reboot.
      */
-
 
 
     protected void onEnter(final L2Character character)
@@ -136,7 +159,13 @@ public class L2PartyPvPZone extends L2ZoneType
                 playersPoints.put(player.getCharId(), 0);
             }
 
-            player.updatePvPFlag(1);
+            if (player.isInParty() && player.getParty().isLeader(player))
+            {
+                registerParty(player.getParty(), player.getObjectId());
+            }
+
+            character.setInsideZone(L2Character.ZONE_PARTYPVP, true);
+            player.sendMessage("You entered 4+ Party Zone.");
             // teleport out all players who attempt "illegal" (re-)entry
             player = null;
         }
@@ -170,25 +199,45 @@ public class L2PartyPvPZone extends L2ZoneType
     protected void onExit(final L2Character character)
     {
 
-            if (character instanceof L2PcInstance)
+        if (character instanceof L2PcInstance)
+        {
+
+            // Thread.dumpStack();
+            L2PcInstance player = (L2PcInstance) character;
+            L2Party pt = player.getParty();
+
+
+
+            if (playersPoints.containsKey(player.getCharId()))
             {
-                // Thread.dumpStack();
-                L2PcInstance player = (L2PcInstance) character;
-
-                if (playersPoints.containsKey(player.getCharId()))
-                {
-                    playersPoints.remove(player.getCharId());
-                }
-
-                if (player.isGM())
-                {
-                    player.sendMessage("You left " + _zoneName);
-                    return;
-                }
-
-                player.stopPvPFlag();
-                player = null;
+                playersPoints.remove(player.getCharId());
             }
+
+            if (player.isGM())
+            {
+                player.sendMessage("You left the 4+ Party Zone Game Master.");
+                return;
+            }
+
+
+
+            if (pt != null && pt.getMemberCount() <= 4)
+            {
+                player.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+                if (partiesInside.containsKey(pt))
+                {
+                    partiesInside.remove(pt);
+                }
+                for (L2PcInstance p : pt.getPartyMembers())
+                {
+                    if (p == null)
+                        continue;
+                    p.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+                    p.setInsideZone(L2Character.ZONE_PARTYPVP, false);
+                }
+            }
+            player = null;
+        }
 
     }
 
@@ -329,6 +378,41 @@ public class L2PartyPvPZone extends L2ZoneType
             }
         }
         return;
+    }
+
+    public class pvpParty {
+
+        private L2Party partyInstance;
+        private int leaderId;
+
+        private int kills;
+        private int deaths;
+        private int mobsKilled;
+        private long enterTime;
+        //etc...
+
+        public pvpParty (int leaderId, L2Party pt)
+        {
+            this.leaderId = leaderId;
+            partyInstance = pt;
+            kills = 0;
+            deaths = 0;
+            mobsKilled = 0;
+            enterTime = System.currentTimeMillis();
+        }
+
+        public int getKills(){return kills;}
+        public int getDeaths(){return deaths;}
+        public int getMobsKilled(){return  mobsKilled;}
+        public L2Party getPartyInstance(){return partyInstance;}
+        public long getTime(){
+            return ((System.currentTimeMillis() - enterTime) / 1000);
+        }
+
+        public void addKill(){kills++;}
+        public void addDeath(){deaths++;}
+        public void addMob(){mobsKilled++;}
+
     }
 
 }

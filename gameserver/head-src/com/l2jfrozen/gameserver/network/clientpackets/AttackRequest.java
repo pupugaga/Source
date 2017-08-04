@@ -16,8 +16,11 @@
  */
 package com.l2jfrozen.gameserver.network.clientpackets;
 
+import com.l2jfrozen.gameserver.datatables.csv.MapRegionTable;
 import com.l2jfrozen.gameserver.model.L2Object;
 import com.l2jfrozen.gameserver.model.L2World;
+import com.l2jfrozen.gameserver.model.L2WorldRegion;
+import com.l2jfrozen.gameserver.model.actor.instance.L2ArenaManagerInstance;
 import com.l2jfrozen.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jfrozen.gameserver.model.actor.instance.L2SummonInstance;
 import com.l2jfrozen.gameserver.model.entity.event.CTF;
@@ -84,7 +87,13 @@ public final class AttackRequest extends L2GameClientPacket
 		// Only GMs can directly attack invisible characters
 		if (target instanceof L2PcInstance && ((L2PcInstance) target).getAppearance().getInvisible() && !activeChar.isGM())
 			return;
-		
+
+		if (L2ArenaManagerInstance.inFightOrWaiting.contains((L2PcInstance) target) && !L2ArenaManagerInstance.inFightOrWaiting.contains(activeChar)){
+			activeChar.teleToLocation(MapRegionTable.TeleportWhereType.Town);
+			((L2PcInstance) target).sendMessage("You target is currently in a duel !");
+			return;
+		}
+
 		// During teleport phase, players cant do any attack
 		if ((TvT.is_teleport() && activeChar._inEventTvT) || (CTF.is_teleport() && activeChar._inEventCTF) || (DM.is_teleport() && activeChar._inEventDM))
 		{
